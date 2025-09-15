@@ -20,7 +20,9 @@
         </header>
 
         <main class="content grid container" id="tiles">
-            <section class="panel tile kpi" style="grid-area:kpi;">
+            <section class="panel tile kpi flip" style="grid-area:kpi;">
+                <div class="flipper">
+                <div class="front">
                 <div class="micro">
                     <span class="micro-icon">⏳</span>
                     <span class="micro-label">Focus Timer</span>
@@ -50,32 +52,70 @@
                     </svg>
                     <div class="ring-text" id="ringText">0%</div>
                 </div>
-            </section>
-
-            <section class="panel tile" style="grid-area:ban;">
-                <div class="micro"><span class="micro-icon">🚫</span><span class="micro-label">Ban Phase</span></div>
-                <div class="chips" id="banChips"></div>
-                <div class="add-row">
-                    <input id="banInput" placeholder="Add site to ban" />
-                    <button id="addBan">Add</button>
+                <div class="flip-actions"><button class="secondary" data-flip="kpi">More</button></div>
                 </div>
-                <ul id="banList" class="list"></ul>
-            </section>
-
-            <section class="panel tile" style="grid-area:pick;">
-                <div class="micro"><span class="micro-icon">✅</span><span class="micro-label">Pick Phase</span></div>
-                <div class="chips" id="pickChips"></div>
-                <div class="add-row">
-                    <input id="pickInput" placeholder="Add site to pick" />
-                    <button id="addPick">Add</button>
+                <div class="back">
+                    <div class="micro"><span class="micro-icon">⏳</span><span class="micro-label">Session Details</span></div>
+                    <div id="kpiSummary" class="summary"></div>
+                    <div class="flip-actions"><button class="secondary" data-flip="kpi">Back</button></div>
                 </div>
-                <ul id="pickList" class="list"></ul>
+                </div>
             </section>
 
-            <section class="panel tile" style="grid-area:presets;">
-                <div class="micro"><span class="micro-icon">✨</span><span class="micro-label">AI & Presets</span></div>
-                <div class="chips" id="categoryChips"></div>
-                <button id="aiSuggest">AI Suggest</button>
+            <section class="panel tile flip" style="grid-area:ban;">
+                <div class="flipper">
+                <div class="front">
+                    <div class="micro"><span class="micro-icon">🚫</span><span class="micro-label">Ban Phase</span></div>
+                    <div class="summary" id="banSummary"><div class="icon-grid" id="banIcons"></div></div>
+                    <div class="flip-actions"><button class="secondary" data-flip="ban">Edit</button></div>
+                </div>
+                <div class="back">
+                    <div class="micro"><span class="micro-icon">🚫</span><span class="micro-label">Ban Websites</span></div>
+                    <div class="chips" id="banChips"></div>
+                    <div class="add-row">
+                        <input id="banInput" placeholder="Add site to ban" />
+                        <button id="addBan">Add</button>
+                    </div>
+                    <ul id="banList" class="list"></ul>
+                    <div class="flip-actions"><button class="secondary" data-flip="ban">Done</button></div>
+                </div>
+                </div>
+            </section>
+
+            <section class="panel tile flip" style="grid-area:pick;">
+                <div class="flipper">
+                <div class="front">
+                    <div class="micro"><span class="micro-icon">✅</span><span class="micro-label">Pick Phase</span></div>
+                    <div class="summary" id="pickSummary"><div class="icon-grid" id="pickIcons"></div></div>
+                    <div class="flip-actions"><button class="secondary" data-flip="pick">Edit</button></div>
+                </div>
+                <div class="back">
+                    <div class="micro"><span class="micro-icon">✅</span><span class="micro-label">Pick Websites</span></div>
+                    <div class="chips" id="pickChips"></div>
+                    <div class="add-row">
+                        <input id="pickInput" placeholder="Add site to pick" />
+                        <button id="addPick">Add</button>
+                    </div>
+                    <ul id="pickList" class="list"></ul>
+                    <div class="flip-actions"><button class="secondary" data-flip="pick">Done</button></div>
+                </div>
+                </div>
+            </section>
+
+            <section class="panel tile flip" style="grid-area:presets;">
+                <div class="flipper">
+                <div class="front">
+                    <div class="micro"><span class="micro-icon">✨</span><span class="micro-label">AI & Presets</span></div>
+                    <div class="summary" id="presetSummary"><div class="icon-grid" id="presetIcons"></div></div>
+                    <div class="flip-actions"><button class="secondary" data-flip="presets">Open</button></div>
+                </div>
+                <div class="back">
+                    <div class="micro"><span class="micro-icon">✨</span><span class="micro-label">AI & Presets</span></div>
+                    <div class="chips" id="categoryChips"></div>
+                    <button id="aiSuggest">AI Suggest</button>
+                    <div class="flip-actions"><button class="secondary" data-flip="presets">Done</button></div>
+                </div>
+                </div>
             </section>
 
             <section class="panel tile" style="grid-area:analytics;">

@@ -46,6 +46,38 @@ function renderLists(){
     pickList.innerHTML = picks.map(h => `<li>${h}</li>`).join('');
 }
 
+function initFlipTiles(){
+    const map = {
+        kpi: document.querySelector('[style*="grid-area:kpi"]'),
+        ban: document.querySelector('[style*="grid-area:ban"]'),
+        pick: document.querySelector('[style*="grid-area:pick"]'),
+        presets: document.querySelector('[style*="grid-area:presets"]')
+    };
+    document.querySelectorAll('[data-flip]').forEach(btn => {
+        btn.onclick = () => {
+            const key = btn.getAttribute('data-flip');
+            const tile = map[key];
+            if (!tile) return;
+            tile.classList.toggle('flipped');
+        };
+    });
+    updateSummaries();
+}
+
+function updateSummaries(){
+    const kpiSum = document.getElementById('kpiSummary');
+    const banSum = document.getElementById('banSummary');
+    const pickSum = document.getElementById('pickSummary');
+    const presetSum = document.getElementById('presetSummary');
+    // icon summaries
+    const banIcons = document.getElementById('banIcons');
+    const pickIcons = document.getElementById('pickIcons');
+    const presetIcons = document.getElementById('presetIcons');
+    if (banIcons){ banIcons.innerHTML = SITE_PRESETS.slice(0,8).map(s => `<div class="icon ${bans.includes(s.host)?'active':''}"><img src="${s.icon}" alt=""/></div>`).join(''); }
+    if (pickIcons){ pickIcons.innerHTML = SITE_PRESETS.slice(0,8).map(s => `<div class="icon ${picks.includes(s.host)?'active':''}"><img src="${s.icon}" alt=""/></div>`).join(''); }
+    if (presetIcons){ presetIcons.innerHTML = Object.keys(CATEGORY_PRESETS).slice(0,4).map(name => `<div class="icon"><span style="font-size:10px">${name.split(' ')[0]}</span></div>`).join(''); }
+    if (kpiSum) kpiSum.innerHTML = `<div>Pomodoro: ${document.getElementById('pomodoro')?.checked ? 'On' : 'Off'}</div>`;
+}
 function renderChips(){
     function makeChip(preset, group){
         const isActive = (group === 'ban' ? bans.includes(preset.host) : picks.includes(preset.host));
@@ -225,11 +257,33 @@ document.getElementById('endSession').onclick = async () => {
     document.querySelectorAll('.presets [data-min]').forEach(btn => {
         btn.onclick = () => { minutesEl.value = btn.getAttribute('data-min'); };
     });
+    // update summaries when lists change through add buttons as well
+    const addBanBtn = document.getElementById('addBan');
+    const addPickBtn = document.getElementById('addPick');
+    if (addBanBtn){
+        const orig = addBanBtn.onclick;
+        addBanBtn.onclick = () => {
+            const v = document.getElementById('banInput').value.trim();
+            if(v){ bans.push(v); renderLists(); renderChips(); attachChipHandlers(); }
+            updateSummaries();
+            if (typeof orig === 'function') orig();
+        };
+    }
+    if (addPickBtn){
+        const orig = addPickBtn.onclick;
+        addPickBtn.onclick = () => {
+            const v = document.getElementById('pickInput').value.trim();
+            if(v){ picks.push(v); renderLists(); renderChips(); attachChipHandlers(); }
+            updateSummaries();
+            if (typeof orig === 'function') orig();
+        };
+    }
     await renderStatus();
     await renderAnalytics();
     // tick ring while active
     setInterval(renderStatus, 1000);
     initDragAndDrop();
+    initFlipTiles();
 })();
 
 function initDragAndDrop(){
