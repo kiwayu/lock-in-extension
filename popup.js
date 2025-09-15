@@ -1,9 +1,12 @@
 const banList = document.getElementById('banList');
 const pickList = document.getElementById('pickList');
 const statusEl = document.getElementById('status');
+const themeSelect = document.getElementById('theme');
+const modeChips = document.getElementById('modeChips');
 const endBtn = document.getElementById('endSession');
 let bans = [];
 let picks = [];
+let mode = 'block';
 
 
 async function render() {
@@ -18,6 +21,33 @@ async function render() {
         statusEl.textContent = '';
         endBtn.style.display = 'none';
     }
+    mode = (session && session.mode) || 'block';
+    modeChips.innerHTML = ['Block (ban-list)','Allow (pick-only)'].map((label, idx) => {
+        const key = idx === 0 ? 'block' : 'allow';
+        const active = mode === key ? 'active' : '';
+        return `<button class="chip ${active}" data-mode="${key}">${label}</button>`;
+    }).join('');
+    document.querySelectorAll('#modeChips .chip').forEach(btn => {
+        btn.onclick = () => { mode = btn.getAttribute('data-mode'); render(); };
+    });
+}
+
+(async function initTheme(){
+    const { theme } = await chrome.storage.local.get(['theme']);
+    themeSelect.value = theme || 'system';
+    applyTheme(themeSelect.value);
+    themeSelect.onchange = async () => {
+        const v = themeSelect.value;
+        await chrome.storage.local.set({ theme: v });
+        applyTheme(v);
+    };
+})();
+
+function applyTheme(theme){
+    const root = document.documentElement;
+    if (theme === 'light') root.setAttribute('data-theme','light');
+    else if (theme === 'dark') root.setAttribute('data-theme','dark');
+    else root.removeAttribute('data-theme');
 }
 
 
@@ -59,11 +89,17 @@ document.getElementById('aiSuggest').onclick = aiSuggest;
 document.getElementById('lockIn').onclick = async () => {
     const minutes = parseInt(document.getElementById('minutes').value, 10);
     const end = Date.now() + minutes * 60000;
-    const session = { active: true, bans, picks, end };
+    const session = { active: true, bans, picks, end, mode, start: Date.now() };
     await chrome.storage.local.set({ session });
     try { await chrome.alarms.clear('lockin_end'); } catch(e) {}
     chrome.alarms.create('lockin_end', { when: end });
     alert('Locked in!');
+    // record start analytics
+    const { analytics } = await chrome.storage.local.get(['analytics']);
+    const a = analytics || {};
+    a.sessionsStarted = (a.sessionsStarted || 0) + 1;
+    a.lastStartedAt = Date.now();
+    await chrome.storage.local.set({ analytics: a });
     render();
 };
 

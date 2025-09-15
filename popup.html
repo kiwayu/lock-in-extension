@@ -8,10 +8,18 @@
 <body>
     <h1>Lock-in Mode</h1>
     <div id="status"></div>
+    <label>Theme:
+        <select id="theme">
+            <option value="system">System</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+        </select>
+    </label>
     <label>Timer (minutes): <input type="number" id="minutes" min="1" value="30"></label>
 
 
     <h2>Ban Phase</h2>
+    <div class="chips" id="modeChips"></div>
     <input type="text" id="banInput" placeholder="Add site to ban">
     <button id="addBan">Add Ban</button>
     <ul id="banList"></ul>

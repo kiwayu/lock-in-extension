@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lock-In New Tab</title>
+    <link rel="stylesheet" href="newtab.css" />
+</head>
+<body>
+    <div class="page">
+        <header class="topbar">
+            <div class="brand">Lock‑In</div>
+            <div class="actions">
+                <label class="switch">
+                    <input type="checkbox" id="themeToggle" />
+                    <span class="slider"></span>
+                    <span class="switch-label" id="themeLabel">Dark</span>
+                </label>
+            </div>
+        </header>
+
+        <main class="content grid container" id="tiles">
+            <section class="panel tile kpi" style="grid-area:kpi;">
+                <div class="micro">
+                    <span class="micro-icon">⏳</span>
+                    <span class="micro-label">Focus Timer</span>
+                </div>
+                <div class="timer-row">
+                    <div class="presets">
+                        <button class="chip" data-min="25">25m</button>
+                        <button class="chip" data-min="45">45m</button>
+                        <button class="chip" data-min="60">60m</button>
+                        <label class="custom-time">Custom <input id="minutes" type="number" min="1" value="30" /></label>
+                        <label class="switch small">
+                            <input type="checkbox" id="pomodoro" />
+                            <span class="slider"></span>
+                            <span class="switch-label">Pomodoro</span>
+                        </label>
+                    </div>
+                    <div class="actions-row">
+                        <button id="lockIn">Lock In</button>
+                        <button id="endSession" class="secondary">End</button>
+                    </div>
+                </div>
+                <div id="status" class="status"></div>
+                <div class="ring">
+                    <svg viewBox="0 0 36 36">
+                        <path class="bg" d="M18 2 a 16 16 0 0 1 0 32 a 16 16 0 0 1 0 -32"/>
+                        <path class="fg" id="ringFg" d="M18 2 a 16 16 0 0 1 0 32 a 16 16 0 0 1 0 -32"/>
+                    </svg>
+                    <div class="ring-text" id="ringText">0%</div>
+                </div>
+            </section>
+
+            <section class="panel tile" style="grid-area:ban;">
+                <div class="micro"><span class="micro-icon">🚫</span><span class="micro-label">Ban Phase</span></div>
+                <div class="chips" id="banChips"></div>
+                <div class="add-row">
+                    <input id="banInput" placeholder="Add site to ban" />
+                    <button id="addBan">Add</button>
+                </div>
+                <ul id="banList" class="list"></ul>
+            </section>
+
+            <section class="panel tile" style="grid-area:pick;">
+                <div class="micro"><span class="micro-icon">✅</span><span class="micro-label">Pick Phase</span></div>
+                <div class="chips" id="pickChips"></div>
+                <div class="add-row">
+                    <input id="pickInput" placeholder="Add site to pick" />
+                    <button id="addPick">Add</button>
+                </div>
+                <ul id="pickList" class="list"></ul>
+            </section>
+
+            <section class="panel tile" style="grid-area:presets;">
+                <div class="micro"><span class="micro-icon">✨</span><span class="micro-label">AI & Presets</span></div>
+                <div class="chips" id="categoryChips"></div>
+                <button id="aiSuggest">AI Suggest</button>
+            </section>
+
+            <section class="panel tile" style="grid-area:analytics;">
+                <div class="micro"><span class="micro-icon">📊</span><span class="micro-label">Analytics</span></div>
+                <div class="kpis" id="kpis"></div>
+                <div class="chart" id="chart7"></div>
+                <div class="violations" id="violations"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="ai-client.js"></script>
+    <script src="newtab.js"></script>
+</body>
+</html>
+

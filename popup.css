@@ -1,22 +1,25 @@
-body {
-    font-family: sans-serif;
-    width: 300px;
-    padding: 10px;
+:root {
+    --bg: #0b1021;
+    --fg: #e8ecff;
+    --muted: #a8b4ff;
+    --border: #2b3a6a;
+    --accent: #3b82f6;
 }
 
-h1 {
-    font-size: 18px;
+[data-theme="light"]:root {
+    --bg: #ffffff;
+    --fg: #0f172a;
+    --muted: #475569;
+    --border: #e2e8f0;
+    --accent: #2563eb;
 }
 
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-li {
-    margin: 3px 0;
-}
-
-button {
-    margin-top: 5px;
-}
+body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; width: 320px; padding: 12px; background: var(--bg); color: var(--fg); }
+h1 { font-size: 18px; margin: 0 0 6px; }
+ul { list-style: none; padding: 0; }
+li { margin: 3px 0; }
+input, button { font: inherit; }
+input { padding: 6px 8px; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--fg); }
+button { margin-top: 5px; padding: 6px 10px; border-radius: 8px; border: 1px solid transparent; background: var(--accent); color: white; cursor: pointer; }
+button.secondary { background: transparent; border-color: var(--border); color: var(--fg); }
+#status { color: var(--muted); margin-bottom: 6px; }
