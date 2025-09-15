@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <h1>Lock-in Mode</h1>
+    <label>Timer (minutes): <input type="number" id="minutes" min="1" value="30"></label>
+
+
+    <h2>Ban Phase</h2>
+    <input type="text" id="banInput" placeholder="Add site to ban">
+    <button id="addBan">Add Ban</button>
+    <ul id="banList"></ul>
+
+
+    <h2>Pick Phase</h2>
+    <input type="text" id="pickInput" placeholder="Add site to pick">
+    <button id="addPick">Add Pick</button>
+    <ul id="pickList"></ul>
+
+
+    <button id="aiSuggest">AI Suggest</button>
+    <button id="lockIn">Lock In</button>
+
+
+    <script src="ai-client.js"></script>
+    <script src="popup.js"></script>
+</body>
+
+</html>

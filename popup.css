@@ -1,0 +1,22 @@
+body {
+    font-family: sans-serif;
+    width: 300px;
+    padding: 10px;
+}
+
+h1 {
+    font-size: 18px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin: 3px 0;
+}
+
+button {
+    margin-top: 5px;
+}
