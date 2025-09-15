@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mission Unsuccessful</title>
+    <link rel="stylesheet" href="mission.css" />
+</head>
+<body>
+    <div class="wrap">
+        <div class="card">
+            <div class="title">Mission Unsuccessful</div>
+            <div class="subtitle">You tried to open a banned site during Lock-In.</div>
+            <div class="from" id="from"></div>
+            <div class="timer" id="timeleft"></div>
+            <div class="motivation" id="motivation"></div>
+            <div class="cta">
+                <a id="back" class="button secondary">Go back</a>
+                <button id="break">Break Lock-In</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (async function(){
+        const params = new URLSearchParams(location.search);
+        const from = params.get('from');
+        if (from) {
+            document.getElementById('from').textContent = 'From: ' + new URL(from).hostname;
+        }
+
+        const data = await chrome.storage.local.get(['session']);
+        const s = data.session;
+        if (s && s.active) {
+            const mins = Math.max(0, Math.ceil((s.end - Date.now())/60000));
+            document.getElementById('timeleft').textContent = 'Time remaining: ' + mins + ' min';
+        }
+
+        document.getElementById('back').onclick = () => {
+            if (from) location.href = from; else window.close();
+        };
+        document.getElementById('break').onclick = async () => {
+            await chrome.storage.local.set({ session: { ...(s||{}), active: false } });
+            alert('Lock-In ended.');
+            window.close();
+        };
+
+        try {
+            // Lightweight motivation via local Prompt API if available
+            const topic = 'your focus';
+            if (navigator.languageModel && typeof navigator.languageModel.create === 'function'){
+                const model = await navigator.languageModel.create();
+                const resp = await model.prompt({ prompt: 'Give a short 1 sentence motivational message for staying focused.'});
+                const msg = (resp && (resp.output || resp.outputText || resp.outputStructured)) || '';
+                document.getElementById('motivation').textContent = String(msg).trim();
+            }
+        } catch(e) {}
+    })();
+    </script>
+    </body>
+    </html>
+
+

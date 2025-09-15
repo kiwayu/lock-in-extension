@@ -1,4 +1,77 @@
 body {
+    margin: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: radial-gradient(1200px 800px at 20% 0%, #101428, #060814);
+    color: #e8ecff;
+}
+
+.wrap {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    text-align: center;
+    padding: 24px;
+}
+
+.card {
+    background: rgba(16, 20, 40, 0.8);
+    border: 1px solid #2b3a6a;
+    border-radius: 16px;
+    padding: 28px 24px;
+    max-width: 640px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+.title {
+    font-size: 22px;
+    letter-spacing: 0.5px;
+}
+
+.subtitle {
+    color: #a8b4ff;
+    margin-top: 6px;
+}
+
+.from {
+    margin-top: 12px;
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.cta {
+    margin-top: 18px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cta button, .cta a.button {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+}
+
+.cta button.secondary, .cta a.button.secondary {
+    background: transparent;
+    border: 1px solid #2b3a6a;
+}
+
+.timer {
+    margin-top: 12px;
+    font-variant-numeric: tabular-nums;
+    color: #a8b4ff;
+}
+
+.motivation {
+    margin-top: 12px;
+    color: #c7d2fe;
+}
+
+body {
     font-family: sans-serif;
     text-align: center;
     margin-top: 100px;

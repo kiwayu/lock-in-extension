@@ -6,7 +6,8 @@
     "permissions": [
         "storage",
         "tabs",
-        "notifications"
+        "notifications",
+        "alarms"
     ],
     "host_permissions": [
         "<all_urls>"
@@ -24,7 +25,7 @@
                 "<all_urls>"
             ],
             "js": [
-                "content.js"
+                "Content.js"
             ],
             "run_at": "document_start"
         }

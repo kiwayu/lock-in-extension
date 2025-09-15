@@ -1,12 +1,23 @@
 const banList = document.getElementById('banList');
 const pickList = document.getElementById('pickList');
+const statusEl = document.getElementById('status');
+const endBtn = document.getElementById('endSession');
 let bans = [];
 let picks = [];
 
 
-function render() {
+async function render() {
     banList.innerHTML = bans.map(b => `<li>${b}</li>`).join('');
     pickList.innerHTML = picks.map(p => `<li>${p}</li>`).join('');
+    const { session } = await chrome.storage.local.get(['session']);
+    if (session && session.active) {
+        const minsLeft = Math.max(0, Math.ceil((session.end - Date.now())/60000));
+        statusEl.textContent = `Active — ${minsLeft} min left`;
+        endBtn.style.display = '';
+    } else {
+        statusEl.textContent = '';
+        endBtn.style.display = 'none';
+    }
 }
 
 
@@ -50,7 +61,20 @@ document.getElementById('lockIn').onclick = async () => {
     const end = Date.now() + minutes * 60000;
     const session = { active: true, bans, picks, end };
     await chrome.storage.local.set({ session });
+    try { await chrome.alarms.clear('lockin_end'); } catch(e) {}
+    chrome.alarms.create('lockin_end', { when: end });
     alert('Locked in!');
+    render();
+};
+
+endBtn.onclick = async () => {
+    const { session } = await chrome.storage.local.get(['session']);
+    if (session) {
+        await chrome.storage.local.set({ session: { ...session, active: false } });
+        try { await chrome.alarms.clear('lockin_end'); } catch(e) {}
+        alert('Session ended.');
+        render();
+    }
 };
 
 
