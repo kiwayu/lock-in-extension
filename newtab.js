@@ -12,15 +12,15 @@ const SITE_PRESETS = [
 
 const CATEGORY_PRESETS = {
     Study: {
-        bans: ['youtube.com','tiktok.com','instagram.com','reddit.com','twitter.com'],
-        picks: ['wikipedia.org','khanacademy.org','quizlet.com']
+        bans: ['youtube.com', 'tiktok.com', 'instagram.com', 'reddit.com', 'twitter.com'],
+        picks: ['wikipedia.org', 'khanacademy.org', 'quizlet.com']
     },
     Work: {
-        bans: ['tiktok.com','instagram.com','netflix.com','reddit.com'],
-        picks: ['github.com','jira.com','slack.com']
+        bans: ['tiktok.com', 'instagram.com', 'netflix.com', 'reddit.com'],
+        picks: ['github.com', 'jira.com', 'slack.com']
     },
     "Deep Focus": {
-        bans: ['youtube.com','twitter.com','instagram.com','reddit.com','tiktok.com','netflix.com'],
+        bans: ['youtube.com', 'twitter.com', 'instagram.com', 'reddit.com', 'tiktok.com', 'netflix.com'],
         picks: ['wikipedia.org']
     }
 };
@@ -41,12 +41,12 @@ const modeChips = document.getElementById('modeChips');
 const categoryChips = document.getElementById('categoryChips');
 let mode = 'block';
 
-function renderLists(){
+function renderLists() {
     banList.innerHTML = bans.map(h => `<li>${h}</li>`).join('');
     pickList.innerHTML = picks.map(h => `<li>${h}</li>`).join('');
 }
 
-function initFlipTiles(){
+function initFlipTiles() {
     const map = {
         kpi: document.querySelector('[style*="grid-area:kpi"]'),
         ban: document.querySelector('[style*="grid-area:ban"]'),
@@ -64,7 +64,7 @@ function initFlipTiles(){
     updateSummaries();
 }
 
-function updateSummaries(){
+function updateSummaries() {
     const kpiSum = document.getElementById('kpiSummary');
     const banSum = document.getElementById('banSummary');
     const pickSum = document.getElementById('pickSummary');
@@ -73,19 +73,19 @@ function updateSummaries(){
     const banIcons = document.getElementById('banIcons');
     const pickIcons = document.getElementById('pickIcons');
     const presetIcons = document.getElementById('presetIcons');
-    if (banIcons){ banIcons.innerHTML = SITE_PRESETS.slice(0,8).map(s => `<div class="icon ${bans.includes(s.host)?'active':''}"><img src="${s.icon}" alt=""/></div>`).join(''); }
-    if (pickIcons){ pickIcons.innerHTML = SITE_PRESETS.slice(0,8).map(s => `<div class="icon ${picks.includes(s.host)?'active':''}"><img src="${s.icon}" alt=""/></div>`).join(''); }
-    if (presetIcons){ presetIcons.innerHTML = Object.keys(CATEGORY_PRESETS).slice(0,4).map(name => `<div class="icon"><span style="font-size:10px">${name.split(' ')[0]}</span></div>`).join(''); }
+    if (banIcons) { banIcons.innerHTML = SITE_PRESETS.slice(0, 8).map(s => `<div class="icon ${bans.includes(s.host) ? 'active' : ''}"><img src="${s.icon}" alt=""/></div>`).join(''); }
+    if (pickIcons) { pickIcons.innerHTML = SITE_PRESETS.slice(0, 8).map(s => `<div class="icon ${picks.includes(s.host) ? 'active' : ''}"><img src="${s.icon}" alt=""/></div>`).join(''); }
+    if (presetIcons) { presetIcons.innerHTML = Object.keys(CATEGORY_PRESETS).slice(0, 4).map(name => `<div class="icon"><span style="font-size:10px">${name.split(' ')[0]}</span></div>`).join(''); }
     if (kpiSum) kpiSum.innerHTML = `<div>Pomodoro: ${document.getElementById('pomodoro')?.checked ? 'On' : 'Off'}</div>`;
 }
-function renderChips(){
-    function makeChip(preset, group){
+function renderChips() {
+    function makeChip(preset, group) {
         const isActive = (group === 'ban' ? bans.includes(preset.host) : picks.includes(preset.host));
         return `<button class="chip ${isActive ? 'active' : ''}" data-group="${group}" data-host="${preset.host}"><img src="${preset.icon}" alt=""/>${preset.label}</button>`;
     }
     banChips.innerHTML = SITE_PRESETS.map(p => makeChip(p, 'ban')).join('');
     pickChips.innerHTML = SITE_PRESETS.map(p => makeChip(p, 'pick')).join('');
-    modeChips.innerHTML = ['Block (ban-list)','Allow (pick-only)'].map((label, idx) => {
+    modeChips.innerHTML = ['Block (ban-list)', 'Allow (pick-only)'].map((label, idx) => {
         const key = idx === 0 ? 'block' : 'allow';
         const active = mode === key ? 'active' : '';
         return `<button class="chip ${active}" data-mode="${key}">${label}</button>`;
@@ -93,27 +93,27 @@ function renderChips(){
     categoryChips.innerHTML = Object.keys(CATEGORY_PRESETS).map(name => `<button class="chip" data-category="${name}">${name}</button>`).join('');
 }
 
-function attachChipHandlers(){
+function attachChipHandlers() {
     document.querySelectorAll('.chip').forEach(btn => {
         btn.onclick = () => {
             const group = btn.getAttribute('data-group');
             const host = btn.getAttribute('data-host');
             const m = btn.getAttribute('data-mode');
             const cat = btn.getAttribute('data-category');
-            if (m){
+            if (m) {
                 mode = m;
-            } else if (cat){
+            } else if (cat) {
                 const preset = CATEGORY_PRESETS[cat];
-                if (preset){ bans = [...new Set(preset.bans)]; picks = [...new Set(preset.picks)]; }
+                if (preset) { bans = [...new Set(preset.bans)]; picks = [...new Set(preset.picks)]; }
                 // record category usage
-                (async ()=>{
+                (async () => {
                     const { analytics } = await chrome.storage.local.get(['analytics']);
                     const a = analytics || {}; a.categoryUsage = a.categoryUsage || {}; a.categoryUsage[cat] = (a.categoryUsage[cat] || 0) + 1; await chrome.storage.local.set({ analytics: a });
                 })();
-            } else if (group && host){
+            } else if (group && host) {
                 const arr = (group === 'ban') ? bans : picks;
                 const i = arr.indexOf(host);
-                if (i >= 0) arr.splice(i,1); else arr.push(host);
+                if (i >= 0) arr.splice(i, 1); else arr.push(host);
             }
             renderChips();
             attachChipHandlers();
@@ -122,20 +122,20 @@ function attachChipHandlers(){
     });
 }
 
-async function renderStatus(){
+async function renderStatus() {
     const { session } = await chrome.storage.local.get(['session']);
     const endBtn = document.getElementById('endSession');
-    if (session && session.active){
-        const minsLeft = Math.max(0, Math.ceil((session.end - Date.now())/60000));
+    if (session && session.active) {
+        const minsLeft = Math.max(0, Math.ceil((session.end - Date.now()) / 60000));
         statusEl.textContent = `Active — ${minsLeft} min left`;
         endBtn.disabled = false;
         // progress ring update
-        const total = Math.max(1, Math.round((session.end - session.start)/1000));
-        const left = Math.max(0, Math.round((session.end - Date.now())/1000));
+        const total = Math.max(1, Math.round((session.end - session.start) / 1000));
+        const left = Math.max(0, Math.round((session.end - Date.now()) / 1000));
         const pct = Math.max(0, Math.min(100, Math.round(((total - left) / total) * 100)));
         const ring = document.getElementById('ringFg');
         const text = document.getElementById('ringText');
-        if (ring && text){
+        if (ring && text) {
             ring.style.strokeDasharray = `${pct} 100`;
             text.textContent = `${pct}%`;
         }
@@ -144,11 +144,11 @@ async function renderStatus(){
         endBtn.disabled = true;
         const ring = document.getElementById('ringFg');
         const text = document.getElementById('ringText');
-        if (ring && text){ ring.style.strokeDasharray = `0 100`; text.textContent = `0%`; }
+        if (ring && text) { ring.style.strokeDasharray = `0 100`; text.textContent = `0%`; }
     }
 }
 
-async function renderAnalytics(){
+async function renderAnalytics() {
     const { analytics } = await chrome.storage.local.get(['analytics']);
     const a = analytics || {};
     const kpis = document.getElementById('kpis');
@@ -164,27 +164,27 @@ async function renderAnalytics(){
 
     const chart = document.getElementById('chart7');
     const daily = a.daily || {};
-    const days = [...Array(7)].map((_,i) => {
-        const d = new Date(Date.now() - (6-i)*86400000);
-        return d.toISOString().slice(0,10);
+    const days = [...Array(7)].map((_, i) => {
+        const d = new Date(Date.now() - (6 - i) * 86400000);
+        return d.toISOString().slice(0, 10);
     });
     const values = days.map(k => daily[k] || 0);
     const max = Math.max(1, ...values);
-    chart.innerHTML = values.map(v => `<div class="bar" style="height:${Math.round((v/max)*100)}%" title="${v} min"></div>`).join('');
+    chart.innerHTML = values.map(v => `<div class="bar" style="height:${Math.round((v / max) * 100)}%" title="${v} min"></div>`).join('');
 
     const viol = document.getElementById('violations');
-    const top = Object.entries(a.topViolations || {}).sort((a,b)=>b[1]-a[1]).slice(0,5);
-    viol.textContent = top.length ? `Top violations: ${top.map(([h,c])=>h+" ("+c+")").join(', ')}` : 'No violations yet.';
+    const top = Object.entries(a.topViolations || {}).sort((a, b) => b[1] - a[1]).slice(0, 5);
+    viol.textContent = top.length ? `Top violations: ${top.map(([h, c]) => h + " (" + c + ")").join(', ')}` : 'No violations yet.';
 }
 
-function applyTheme(theme){
+function applyTheme(theme) {
     const root = document.documentElement;
-    if (theme === 'light') root.setAttribute('data-theme','light');
-    else if (theme === 'dark') root.setAttribute('data-theme','dark');
+    if (theme === 'light') root.setAttribute('data-theme', 'light');
+    else if (theme === 'dark') root.setAttribute('data-theme', 'dark');
     else root.removeAttribute('data-theme');
 }
 
-async function initTheme(){
+async function initTheme() {
     const { theme } = await chrome.storage.local.get(['theme']);
     const t = theme || 'dark';
     const isDark = t === 'dark';
@@ -201,11 +201,11 @@ async function initTheme(){
 
 document.getElementById('addBan').onclick = () => {
     const val = document.getElementById('banInput').value.trim();
-    if(val){ bans.push(val); renderLists(); renderChips(); attachChipHandlers(); }
+    if (val) { bans.push(val); renderLists(); renderChips(); attachChipHandlers(); }
 };
 document.getElementById('addPick').onclick = () => {
     const val = document.getElementById('pickInput').value.trim();
-    if(val){ picks.push(val); renderLists(); renderChips(); attachChipHandlers(); }
+    if (val) { picks.push(val); renderLists(); renderChips(); attachChipHandlers(); }
 };
 
 document.getElementById('aiSuggest').onclick = async () => {
@@ -216,9 +216,9 @@ document.getElementById('aiSuggest').onclick = async () => {
         bans = result.bans || [];
         picks = result.picks || [];
         renderLists(); renderChips(); attachChipHandlers();
-    } catch(e){
-        bans = ['youtube.com','twitter.com','netflix.com'];
-        picks = ['wikipedia.org','github.com'];
+    } catch (e) {
+        bans = ['youtube.com', 'twitter.com', 'netflix.com'];
+        picks = ['wikipedia.org', 'github.com'];
         renderLists(); renderChips(); attachChipHandlers();
     }
 };
@@ -228,7 +228,7 @@ document.getElementById('lockIn').onclick = async () => {
     const end = Date.now() + minutes * 60000;
     const session = { active: true, bans, picks, end, mode, start: Date.now(), pomodoro: pomodoroToggle && pomodoroToggle.checked };
     await chrome.storage.local.set({ session });
-    try { await chrome.alarms.clear('lockin_end'); } catch(e) {}
+    try { await chrome.alarms.clear('lockin_end'); } catch (e) { }
     chrome.alarms.create('lockin_end', { when: end });
     // record start analytics
     const { analytics } = await chrome.storage.local.get(['analytics']);
@@ -241,14 +241,14 @@ document.getElementById('lockIn').onclick = async () => {
 
 document.getElementById('endSession').onclick = async () => {
     const { session } = await chrome.storage.local.get(['session']);
-    if (session){
+    if (session) {
         await chrome.storage.local.set({ session: { ...session, active: false } });
-        try { await chrome.alarms.clear('lockin_end'); } catch(e) {}
+        try { await chrome.alarms.clear('lockin_end'); } catch (e) { }
         await renderStatus();
     }
 };
 
-(async function init(){
+(async function init() {
     await initTheme();
     renderLists();
     renderChips();
@@ -260,20 +260,20 @@ document.getElementById('endSession').onclick = async () => {
     // update summaries when lists change through add buttons as well
     const addBanBtn = document.getElementById('addBan');
     const addPickBtn = document.getElementById('addPick');
-    if (addBanBtn){
+    if (addBanBtn) {
         const orig = addBanBtn.onclick;
         addBanBtn.onclick = () => {
             const v = document.getElementById('banInput').value.trim();
-            if(v){ bans.push(v); renderLists(); renderChips(); attachChipHandlers(); }
+            if (v) { bans.push(v); renderLists(); renderChips(); attachChipHandlers(); }
             updateSummaries();
             if (typeof orig === 'function') orig();
         };
     }
-    if (addPickBtn){
+    if (addPickBtn) {
         const orig = addPickBtn.onclick;
         addPickBtn.onclick = () => {
             const v = document.getElementById('pickInput').value.trim();
-            if(v){ picks.push(v); renderLists(); renderChips(); attachChipHandlers(); }
+            if (v) { picks.push(v); renderLists(); renderChips(); attachChipHandlers(); }
             updateSummaries();
             if (typeof orig === 'function') orig();
         };
@@ -286,21 +286,21 @@ document.getElementById('endSession').onclick = async () => {
     initFlipTiles();
 })();
 
-function initDragAndDrop(){
+function initDragAndDrop() {
     const tiles = document.getElementById('tiles');
     const sections = Array.from(tiles.querySelectorAll('.tile'));
     sections.forEach((sec, idx) => {
-        sec.setAttribute('draggable','true');
-        sec.dataset.tileId = sec.getAttribute('style') || ('tile-'+idx);
+        sec.setAttribute('draggable', 'true');
+        sec.dataset.tileId = sec.getAttribute('style') || ('tile-' + idx);
         sec.addEventListener('dragstart', onDragStart);
         sec.addEventListener('dragover', onDragOver);
         sec.addEventListener('drop', onDrop);
     });
 
     let dragId = null;
-    function onDragStart(e){ dragId = e.currentTarget.dataset.tileId; e.dataTransfer.effectAllowed = 'move'; }
-    function onDragOver(e){ e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
-    async function onDrop(e){
+    function onDragStart(e) { dragId = e.currentTarget.dataset.tileId; e.dataTransfer.effectAllowed = 'move'; }
+    function onDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
+    async function onDrop(e) {
         e.preventDefault();
         const target = e.currentTarget;
         const targetId = target.dataset.tileId;
@@ -309,7 +309,7 @@ function initDragAndDrop(){
         const a = nodes.find(n => n.dataset.tileId === dragId);
         const b = nodes.find(n => n.dataset.tileId === targetId);
         if (!a || !b) return;
-        if (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING){
+        if (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING) {
             tiles.insertBefore(b, a);
         } else {
             tiles.insertBefore(a, b);
@@ -320,7 +320,7 @@ function initDragAndDrop(){
     }
 
     // restore order
-    (async function(){
+    (async function () {
         const { tileOrder } = await chrome.storage.local.get(['tileOrder']);
         if (!tileOrder || !Array.isArray(tileOrder)) return;
         const map = Object.fromEntries(sections.map(s => [s.dataset.tileId, s]));

@@ -14,7 +14,7 @@ async function render() {
     pickList.innerHTML = picks.map(p => `<li>${p}</li>`).join('');
     const { session } = await chrome.storage.local.get(['session']);
     if (session && session.active) {
-        const minsLeft = Math.max(0, Math.ceil((session.end - Date.now())/60000));
+        const minsLeft = Math.max(0, Math.ceil((session.end - Date.now()) / 60000));
         statusEl.textContent = `Active — ${minsLeft} min left`;
         endBtn.style.display = '';
     } else {
@@ -22,7 +22,7 @@ async function render() {
         endBtn.style.display = 'none';
     }
     mode = (session && session.mode) || 'block';
-    modeChips.innerHTML = ['Block (ban-list)','Allow (pick-only)'].map((label, idx) => {
+    modeChips.innerHTML = ['Block (ban-list)', 'Allow (pick-only)'].map((label, idx) => {
         const key = idx === 0 ? 'block' : 'allow';
         const active = mode === key ? 'active' : '';
         return `<button class="chip ${active}" data-mode="${key}">${label}</button>`;
@@ -32,7 +32,7 @@ async function render() {
     });
 }
 
-(async function initTheme(){
+(async function initTheme() {
     const { theme } = await chrome.storage.local.get(['theme']);
     themeSelect.value = theme || 'system';
     applyTheme(themeSelect.value);
@@ -43,10 +43,10 @@ async function render() {
     };
 })();
 
-function applyTheme(theme){
+function applyTheme(theme) {
     const root = document.documentElement;
-    if (theme === 'light') root.setAttribute('data-theme','light');
-    else if (theme === 'dark') root.setAttribute('data-theme','dark');
+    if (theme === 'light') root.setAttribute('data-theme', 'light');
+    else if (theme === 'dark') root.setAttribute('data-theme', 'dark');
     else root.removeAttribute('data-theme');
 }
 
@@ -91,7 +91,7 @@ document.getElementById('lockIn').onclick = async () => {
     const end = Date.now() + minutes * 60000;
     const session = { active: true, bans, picks, end, mode, start: Date.now() };
     await chrome.storage.local.set({ session });
-    try { await chrome.alarms.clear('lockin_end'); } catch(e) {}
+    try { await chrome.alarms.clear('lockin_end'); } catch (e) { }
     chrome.alarms.create('lockin_end', { when: end });
     alert('Locked in!');
     // record start analytics
@@ -107,7 +107,7 @@ endBtn.onclick = async () => {
     const { session } = await chrome.storage.local.get(['session']);
     if (session) {
         await chrome.storage.local.set({ session: { ...session, active: false } });
-        try { await chrome.alarms.clear('lockin_end'); } catch(e) {}
+        try { await chrome.alarms.clear('lockin_end'); } catch (e) { }
         alert('Session ended.');
         render();
     }

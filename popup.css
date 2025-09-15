@@ -14,12 +14,58 @@
     --accent: #2563eb;
 }
 
-body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; width: 320px; padding: 12px; background: var(--bg); color: var(--fg); }
-h1 { font-size: 18px; margin: 0 0 6px; }
-ul { list-style: none; padding: 0; }
-li { margin: 3px 0; }
-input, button { font: inherit; }
-input { padding: 6px 8px; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--fg); }
-button { margin-top: 5px; padding: 6px 10px; border-radius: 8px; border: 1px solid transparent; background: var(--accent); color: white; cursor: pointer; }
-button.secondary { background: transparent; border-color: var(--border); color: var(--fg); }
-#status { color: var(--muted); margin-bottom: 6px; }
+body {
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    width: 320px;
+    padding: 12px;
+    background: var(--bg);
+    color: var(--fg);
+}
+
+h1 {
+    font-size: 18px;
+    margin: 0 0 6px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin: 3px 0;
+}
+
+input,
+button {
+    font: inherit;
+}
+
+input {
+    padding: 6px 8px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--fg);
+}
+
+button {
+    margin-top: 5px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+}
+
+button.secondary {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--fg);
+}
+
+#status {
+    color: var(--muted);
+    margin-bottom: 6px;
+}
